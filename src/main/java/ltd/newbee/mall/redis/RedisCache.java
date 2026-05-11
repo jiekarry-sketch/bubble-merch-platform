@@ -21,7 +21,6 @@ public class RedisCache {
 
     /**
      * string类型递增
-     *
      * @param key 缓存的键值
      * @return 递增后返回值
      */
@@ -31,7 +30,6 @@ public class RedisCache {
 
     /**
      * string类型递减
-     *
      * @param key redis键
      * @return 递减后返回值
      */
