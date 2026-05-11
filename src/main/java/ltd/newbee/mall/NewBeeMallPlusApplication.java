@@ -1,24 +1,23 @@
-/**
- * 严肃声明：
- * 开源版本请务必保留此注释头信息，若删除我方将保留所有法律责任追究！
- * 本系统已申请软件著作权，受国家版权局知识产权以及国家计算机软件著作权保护！
- * 可正常分享和学习源码，不得用于违法犯罪活动，违者必究！
- * Copyright (c) 2019-2020 十三 all rights reserved.
- * 版权所有，侵权必究！
- */
 package ltd.newbee.mall;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * @author 13
- * @qq交流群 791509631
- * @email 2449207463@qq.com
- * @link https://github.com/newbee-ltd
+ * 启动类
  */
+//使用 MyBatis 操作数据库，所有的数据库接口（Mapper）都放在 ltd.newbee.mall.dao 包下。
+// 有了它，就不需要在每一个 Mapper 接口上都写 @Mapper 注解了。
 @MapperScan(basePackages = "ltd.newbee.mall.dao")
+@Slf4j
+@EnableTransactionManagement //开启事务管理
+@EnableCaching  //开启缓存
+@EnableScheduling //spring task 定时任务，开启任务调度
 @SpringBootApplication
 public class NewBeeMallPlusApplication {
     public static void main(String[] args) {
