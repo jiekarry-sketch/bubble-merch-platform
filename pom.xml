@@ -21,10 +21,17 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
         <lombok>1.18.36</lombok>
+        <aliyun.sdk.oss>3.18.4</aliyun.sdk.oss>
         <nashorn-core.version>15.4</nashorn-core.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun.sdk.oss}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>

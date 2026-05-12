@@ -13,7 +13,7 @@ import java.awt.*;
 import java.io.IOException;
 
 /**
- *图形验证码easy-captcha
+ *获取图形验证码easy-captcha
  */
 @Controller
 @RequestMapping("/common")
@@ -41,7 +41,7 @@ public class CommonController {
         //设置字体
         specCaptcha.setFont(Captcha.FONT_9);
 
-        //验证码存入session 存入当前用户的 Session 中      key
+        //验证码存入session 存入当前用户的 Session 中      key是"verifyCode"里面存的是刚才生成的验证码的组合
         httpServletRequest.getSession().setAttribute("verifyCode",
                 //获取刚才生成的随机字符串,转为小写
                 specCaptcha.text().toLowerCase());

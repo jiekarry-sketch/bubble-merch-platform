@@ -1,14 +1,7 @@
-/**
- * 严肃声明：
- * 开源版本请务必保留此注释头信息，若删除我方将保留所有法律责任追究！
- * 本系统已申请软件著作权，受国家版权局知识产权以及国家计算机软件著作权保护！
- * 可正常分享和学习源码，不得用于违法犯罪活动，违者必究！
- * Copyright (c) 2019-2020 十三 all rights reserved.
- * 版权所有，侵权必究！
- */
 package ltd.newbee.mall.controller.common;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -23,21 +16,29 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@Slf4j
+@Controller  //                继承了一个spring里面的自动配置类
 public class ErrorPageController extends AbstractErrorController {
 
-    private final static String ERROR_PATH = "/error";
+    private final static String ERROR_PATH = "/error"; //私有常量存储错误页面路径
 
+    //构造函数，和类名称一致       获取错误属性                     获取错误视图解析器，将状态码映射为错误页面
     public ErrorPageController(ErrorAttributes errorAttributes, List<ErrorViewResolver> errorViewResolvers) {
+        // 调用父类构造函数
         super(errorAttributes, errorViewResolvers);
     }
 
-
+    /**
+     * 错误页面
+     * 当客户端请求希望返回HTML格式的错误页面，则调用此方法
+     * @param request
+     * @return
+     */
     @RequestMapping(value = ERROR_PATH, produces = "text/html")
     public ModelAndView errorHtml(HttpServletRequest request) {
-        HttpStatus status = getStatus(request);
-        if (HttpStatus.BAD_REQUEST == status) {
-            return new ModelAndView("error/error_400");
+        HttpStatus status = getStatus(request); //获取错误状态码
+        if (HttpStatus.BAD_REQUEST == status) { //  当错误码是400
+            return new ModelAndView("error/error_400"); //返回error_400.html页面
         } else if (HttpStatus.NOT_FOUND == status) {
             return new ModelAndView("error/error_404");
         } else {
@@ -45,11 +46,18 @@ public class ErrorPageController extends AbstractErrorController {
         }
     }
 
+    /**
+     * 返回json格式的错误信息
+     * @param request
+     * @return
+     */
     @RequestMapping(value = ERROR_PATH)
-    @ResponseBody
+    @ResponseBody //返回的对象转化为json格式，返回值直接写入 HTTP 响应体，而不是解析为视图名称
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+        log.info("进入错误页面，error~~");
+        //获取包含错误信息的map
         Map<String, Object> body = getErrorAttributes(request, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.values()));
         HttpStatus status = getStatus(request);
-        return new ResponseEntity<>(body, status);
+        return new ResponseEntity<>(body, status);//返回的对象
     }
 }

@@ -1,19 +1,10 @@
-/**
- * 严肃声明：
- * 开源版本请务必保留此注释头信息，若删除我方将保留所有法律责任追究！
- * 本系统已申请软件著作权，受国家版权局知识产权以及国家计算机软件著作权保护！
- * 可正常分享和学习源码，不得用于违法犯罪活动，违者必究！
- * Copyright (c) 2019-2020 十三 all rights reserved.
- * 版权所有，侵权必究！
- */
 package ltd.newbee.mall.controller.common;
 
 import jakarta.servlet.http.HttpServletRequest;
-import ltd.newbee.mall.config.ProjectConfig;
+import lombok.extern.slf4j.Slf4j;
+import ltd.newbee.mall.util.AliOssUtil;
 import ltd.newbee.mall.util.Result;
 import ltd.newbee.mall.util.ResultGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -25,112 +16,90 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
-/**
- * @author 13
- * @qq交流群 791509631
- * @email 2449207463@qq.com
- * @link https://github.com/newbee-ltd
- */
+@Slf4j
 @Controller
 @RequestMapping("/admin")
 public class UploadController {
 
-    private final Logger log = LoggerFactory.getLogger(UploadController.class);
-
-
     @Autowired
     private StandardServletMultipartResolver standardServletMultipartResolver;
 
+    // 注入我们写好的 OSS 工具类
+    @Autowired
+    private AliOssUtil aliOssUtil;
+
+    /**
+     * 单文件上传
+     */
     @PostMapping({"/upload/file"})
     @ResponseBody
-    public Result upload(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile file) throws URISyntaxException, IOException {
-        BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-        if (bufferedImage == null) {
-            return ResultGenerator.genFailResult("请上传图片类型的文件");
-        }
-        String fileName = file.getOriginalFilename();
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        // 生成文件名称通用方法
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        Random r = new Random();
-        String newFileName = sdf.format(new Date()) + r.nextInt(100) + suffixName;
-        File fileDirectory = new File(ProjectConfig.getFileUploadPath());
-        // 创建文件
-        File destFile = new File(ProjectConfig.getFileUploadPath() + newFileName);
+    public Result upload(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile file) {
         try {
-            if (!fileDirectory.exists()) {
-                if (!fileDirectory.mkdir()) {
-                    throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
-                }
-            }
-            file.transferTo(destFile);
+            // 通过UUID保证文件名不重复并动态地把原始文件名后缀截取
+            String originalFilename = file.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String objectName = "bubble/" + UUID.randomUUID().toString() + extension;
+
+            // 核心：调用工具类上传并获取返回的URL
+            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
+
             Result resultSuccess = ResultGenerator.genSuccessResult();
-            resultSuccess.setData("/upload/" + newFileName);
+            resultSuccess.setData(filePath);
             return resultSuccess;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("文件上传失败", e);
             return ResultGenerator.genFailResult("文件上传失败");
         }
     }
 
+    /**
+     * 多文件上传（用于商品相册等多图场景）
+     */
     @PostMapping({"/upload/files"})
     @ResponseBody
-    public Result uploadV2(HttpServletRequest httpServletRequest) throws IOException {
+    public Result uploadV2(HttpServletRequest httpServletRequest) {
         List<MultipartFile> multipartFiles = new ArrayList<>(8);
         if (standardServletMultipartResolver.isMultipart(httpServletRequest)) {
             MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) httpServletRequest;
             Iterator<String> iter = multiRequest.getFileNames();
-            int total = 0;
+            int totalCount = 0;
             while (iter.hasNext()) {
-                total += 1;
-                MultipartFile file = multiRequest.getFile(iter.next());
-                BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-                if (bufferedImage != null) {
-                    multipartFiles.add(file);
+                if (totalCount > 5) {
+                    return ResultGenerator.genFailResult("最多上传5张图片");
                 }
+                totalCount += 1;
+                MultipartFile file = multiRequest.getFile(iter.next());
+                multipartFiles.add(file);
             }
         }
-        if (CollectionUtils.isEmpty(multipartFiles)) {
-            return ResultGenerator.genFailResult("请选择图片类型的文件上传");
+        if (CollectionUtils.isEmpty(multipartFiles) || multipartFiles.size() > 5) {
+            return ResultGenerator.genFailResult("参数异常或最多上传5张图片");
         }
-        if (multipartFiles.size() > 5) {
-            return ResultGenerator.genFailResult("最多上传5张图片");
-        }
+
         List<String> fileNames = new ArrayList<>(multipartFiles.size());
+
         for (MultipartFile multipartFile : multipartFiles) {
-            String fileName = multipartFile.getOriginalFilename();
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            // 生成文件名称通用方法
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-            Random r = new Random();
-            String newFileName = sdf.format(new Date()) + r.nextInt(100) + suffixName;
-            File fileDirectory = new File(ProjectConfig.getFileUploadPath());
-            // 创建文件
-            File destFile = new File(ProjectConfig.getFileUploadPath() + newFileName);
             try {
-                if (!fileDirectory.exists()) {
-                    if (!fileDirectory.mkdir()) {
-                        throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
-                    }
-                }
-                multipartFile.transferTo(destFile);
-                fileNames.add("/upload/" + newFileName);
+                String originalFilename = multipartFile.getOriginalFilename();
+                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                String objectName = "bubble/" + UUID.randomUUID().toString() + extension;
+
+                String filePath = aliOssUtil.upload(multipartFile.getBytes(), objectName);
+                fileNames.add(filePath);
             } catch (IOException e) {
-                log.error(e.getMessage(), e);
+                log.error("多文件上传至阿里云OSS失败: {}", e.getMessage(), e);
                 return ResultGenerator.genFailResult("文件上传失败");
             }
         }
+
         Result resultSuccess = ResultGenerator.genSuccessResult();
         resultSuccess.setData(fileNames);
         return resultSuccess;
     }
-
 }
