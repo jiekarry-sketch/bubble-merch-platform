@@ -1,7 +1,6 @@
 package ltd.newbee.mall.controller.vo;
 
 import java.time.LocalDate;
-import java.util.StringJoiner;
 
 public class NewBeeMallCouponVO {
 

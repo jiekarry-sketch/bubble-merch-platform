@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Slf4j
 public class OssConfiguration {
-
     @Bean
     @ConditionalOnMissingBean // 保证只有一个工具类对象
     public AliOssUtil aliOssUtil(AliOssProperties aliOssProperties) {

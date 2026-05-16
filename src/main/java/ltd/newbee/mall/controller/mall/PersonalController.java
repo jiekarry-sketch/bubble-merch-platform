@@ -8,14 +8,13 @@
  */
 package ltd.newbee.mall.controller.mall;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import ltd.newbee.mall.common.Constants;
-import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.common.ServiceResultEnum;
 import ltd.newbee.mall.controller.vo.NewBeeMallUserVO;
 import ltd.newbee.mall.entity.MallUser;
+import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.service.NewBeeMallCouponService;
 import ltd.newbee.mall.service.NewBeeMallUserService;
 import ltd.newbee.mall.util.HttpUtil;
@@ -30,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class PersonalController {
 
-    @Resource
+    @Autowired
     private NewBeeMallUserService newBeeMallUserService;
 
     @Autowired

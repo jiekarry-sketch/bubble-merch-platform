@@ -2,7 +2,6 @@ package ltd.newbee.mall.service.impl;
 
 import com.google.common.util.concurrent.RateLimiter;
 import ltd.newbee.mall.common.Constants;
-import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.common.SeckillStatusEnum;
 import ltd.newbee.mall.common.ServiceResultEnum;
 import ltd.newbee.mall.controller.vo.ExposerVO;
@@ -13,6 +12,7 @@ import ltd.newbee.mall.dao.NewBeeMallSeckillMapper;
 import ltd.newbee.mall.dao.NewBeeMallSeckillSuccessMapper;
 import ltd.newbee.mall.entity.NewBeeMallSeckill;
 import ltd.newbee.mall.entity.NewBeeMallSeckillSuccess;
+import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.redis.RedisCache;
 import ltd.newbee.mall.service.NewBeeMallSeckillService;
 import ltd.newbee.mall.util.MD5Util;

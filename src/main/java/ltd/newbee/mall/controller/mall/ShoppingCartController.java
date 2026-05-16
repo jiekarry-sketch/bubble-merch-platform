@@ -8,16 +8,15 @@
  */
 package ltd.newbee.mall.controller.mall;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import ltd.newbee.mall.common.Constants;
-import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.common.ServiceResultEnum;
 import ltd.newbee.mall.controller.vo.NewBeeMallMyCouponVO;
 import ltd.newbee.mall.controller.vo.NewBeeMallShoppingCartItemVO;
 import ltd.newbee.mall.controller.vo.NewBeeMallUserVO;
 import ltd.newbee.mall.entity.NewBeeMallShoppingCartItem;
+import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.service.NewBeeMallCouponService;
 import ltd.newbee.mall.service.NewBeeMallShoppingCartService;
 import ltd.newbee.mall.util.Result;
@@ -32,7 +31,7 @@ import java.util.List;
 @Controller
 public class ShoppingCartController {
 
-    @Resource
+    @Autowired
     private NewBeeMallShoppingCartService newBeeMallShoppingCartService;
 
     @Autowired

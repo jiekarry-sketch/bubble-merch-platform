@@ -27,7 +27,7 @@ import java.util.UUID;
 @RequestMapping("/admin")
 public class UploadController {
 
-    @Autowired
+    @Autowired  //Spring 提供的文件上传解析器，用于判断当前请求是否包含 multipart 数据（即是否为文件上传请求）
     private StandardServletMultipartResolver standardServletMultipartResolver;
 
     // 注入我们写好的 OSS 工具类
@@ -65,7 +65,9 @@ public class UploadController {
     @ResponseBody
     public Result uploadV2(HttpServletRequest httpServletRequest) {
         List<MultipartFile> multipartFiles = new ArrayList<>(8);
+        //检查当前请求是否为 multipart 类型
         if (standardServletMultipartResolver.isMultipart(httpServletRequest)) {
+            //强制转换为 MultipartHttpServletRequest，该接口提供了获取所有上传文件的方法。
             MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) httpServletRequest;
             Iterator<String> iter = multiRequest.getFileNames();
             int totalCount = 0;
@@ -83,7 +85,7 @@ public class UploadController {
         }
 
         List<String> fileNames = new ArrayList<>(multipartFiles.size());
-
+        //循环上传每个文件
         for (MultipartFile multipartFile : multipartFiles) {
             try {
                 String originalFilename = multipartFile.getOriginalFilename();

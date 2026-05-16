@@ -8,34 +8,29 @@
  */
 package ltd.newbee.mall.controller.admin;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import ltd.newbee.mall.common.IndexConfigTypeEnum;
-import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.common.ServiceResultEnum;
 import ltd.newbee.mall.entity.IndexConfig;
+import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.service.NewBeeMallIndexConfigService;
 import ltd.newbee.mall.util.PageQueryUtil;
 import ltd.newbee.mall.util.Result;
 import ltd.newbee.mall.util.ResultGenerator;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * @author 13
- * @qq交流群 791509631
- * @email 2449207463@qq.com
- * @link https://github.com/newbee-ltd
- */
+
 @Controller
 @RequestMapping("/admin")
 public class NewBeeMallGoodsIndexConfigController {
 
-    @Resource
+    @Autowired
     private NewBeeMallIndexConfigService newBeeMallIndexConfigService;
 
     @GetMapping("/indexConfigs")

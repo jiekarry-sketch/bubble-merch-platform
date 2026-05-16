@@ -8,17 +8,17 @@
  */
 package ltd.newbee.mall.controller.mall;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import ltd.newbee.mall.common.Constants;
 import ltd.newbee.mall.common.IndexConfigTypeEnum;
-import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.controller.vo.NewBeeMallIndexCarouselVO;
 import ltd.newbee.mall.controller.vo.NewBeeMallIndexCategoryVO;
 import ltd.newbee.mall.controller.vo.NewBeeMallIndexConfigGoodsVO;
+import ltd.newbee.mall.exception.NewBeeMallException;
 import ltd.newbee.mall.service.NewBeeMallCarouselService;
 import ltd.newbee.mall.service.NewBeeMallCategoryService;
 import ltd.newbee.mall.service.NewBeeMallIndexConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,13 +28,13 @@ import java.util.List;
 @Controller
 public class IndexController {
 
-    @Resource
+    @Autowired
     private NewBeeMallCarouselService newBeeMallCarouselService;
 
-    @Resource
+    @Autowired
     private NewBeeMallIndexConfigService newBeeMallIndexConfigService;
 
-    @Resource
+    @Autowired
     private NewBeeMallCategoryService newBeeMallCategoryService;
 
     @GetMapping({"/index", "/", "/index.html"})

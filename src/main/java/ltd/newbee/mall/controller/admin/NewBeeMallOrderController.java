@@ -8,7 +8,6 @@
  */
 package ltd.newbee.mall.controller.admin;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import ltd.newbee.mall.common.ServiceResultEnum;
 import ltd.newbee.mall.controller.vo.NewBeeMallOrderItemVO;
@@ -36,7 +35,7 @@ import java.util.Objects;
 @RequestMapping("/admin")
 public class NewBeeMallOrderController {
 
-    @Resource
+    @Autowired
     private NewBeeMallOrderService newBeeMallOrderService;
 
     @GetMapping("/orders")
