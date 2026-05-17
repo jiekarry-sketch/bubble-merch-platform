@@ -19,8 +19,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>17</java.version>
-        <lombok>1.18.36</lombok>
+        <java.version>21</java.version>
+        <lombok>1.18.46</lombok>
         <aliyun.sdk.oss>3.18.4</aliyun.sdk.oss>
         <nashorn-core.version>15.4</nashorn-core.version>
     </properties>
